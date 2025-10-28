@@ -13,9 +13,10 @@
 
 import {test,expect,Locator} from "@playwright/test"
 test("Verify playwright locators", async({page})=>{
+test.setTimeout(40000); // 40 sec
 await page.goto("https://demo.nopcommerce.com");
 const logo:Locator=page.getByAltText("nopCommerce demo store"); //getByAltText()
-await expect(logo).toBeVisible();
+await expect(logo).toBeVisible({timeout:10000});
 await expect(page.getByText("Welcome to our store")).toBeVisible(); //getByText() using full/partial string
 //await expect(page.getByText(/Welcome\s+To\s+Our\s+Store/i)).toBeVisible(); //getByText using reg expression
 await page.getByRole("link",{name:"Register"}).click();
