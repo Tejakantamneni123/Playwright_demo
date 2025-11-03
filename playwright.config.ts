@@ -29,11 +29,15 @@ export default defineConfig({
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     // baseURL: 'http://localhost:3000',
+    launchOptions:{
+       args: ["--start-fullscreen"]
+    },
     // viewport :{width:1278, height:574},
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video:"retain-on-failure",
+    headless: false,
   },
 
   /* Configure projects for major browsers */
