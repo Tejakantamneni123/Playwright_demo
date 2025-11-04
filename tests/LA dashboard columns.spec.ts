@@ -14,7 +14,7 @@ await page.getByRole('textbox', { name: 'Enter your email, phone, or' }).fill('L
 await page.getByRole('button', { name: 'Next' }).click(); // next button 
 await page.getByRole('textbox', { name: 'Enter the password for' }).fill('NH@mA4g3$pn?qZF!');// password field
 await page.getByRole('button', { name: 'Sign in' }).click();; // sign-in button
-await page.waitForTimeout(5000);
+await page.waitForLoadState(); // wait for page loaded completely
 // navigate to LA dashboard and verify columns
 await page.getByAltText("Group Engagement dashboard").click(); // LA dashboard
 await page.locator('div').filter({ hasText: /^Issuer Name$/ }).isVisible();
