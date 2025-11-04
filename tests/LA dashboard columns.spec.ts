@@ -1,5 +1,10 @@
 import {test,expect, chromium} from "@playwright/test"
-test("verify LA dashboard columns", async({page})=>{
+test("verify LA dashboard columns", async()=>{
+const browser = await chromium.launch();
+const context = await browser.newContext();
+const page = await context.newPage(); 
+// Clear all cookies
+await context.clearCookies();
 await page.goto("https://qtopportalweb.aaps.deloitte.com/");
 await page.waitForTimeout(5000);
 // click on get started link
