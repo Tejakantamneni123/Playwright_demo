@@ -1,7 +1,7 @@
 import {test,expect, chromium} from "@playwright/test"
-test("LEFAH login page", async({page})=>{
+test("verify LA dashboard columns", async({page})=>{
 await page.goto("https://qtopportalweb.aaps.deloitte.com/");
-await page.waitForLoadState();
+await page.waitForTimeout(5000);
 // click on get started link
 await page.getByRole("button",{name:"get started "}).click();
 // filling login details
