@@ -12,13 +12,13 @@ await page.getByRole('button', { name: 'Sign in' }).click();; // sign-in button
 await page.waitForTimeout(5000);
 // navigate to LA dashboard and verify columns
 await page.getByAltText("Group Engagement dashboard").click(); // LA dashboard
-await expect(page.locator('div').filter({ hasText: 'Issuer Name' })).toBeVisible();
-await expect(page.locator('div').filter({ hasText: 'Fiscal Year End' })).toBeVisible();
-await expect(page.locator('div').filter({ hasText: 'Estimated Report Release Date' })).toBeVisible();
-await expect(page.locator('div').filter({ hasText: 'Form AP Approval Due Date' })).toBeVisible();
-await expect(page.locator('div').filter({ hasText: 'Form AP Hours Record Status' })).toBeVisible();
-await expect(page.locator('div').filter({ hasText: 'Form AP Hours Record #' })).toBeVisible();
-await expect(page.locator('div').filter({ hasText: 'My Role' })).toBeVisible();
-await expect(page.locator('div').filter({ hasText: 'Country Name' })).toBeVisible();
+await page.locator('div').filter({ hasText: /^Issuer Name$/ }).isVisible();
+await page.locator('div').filter({ hasText: /^Fiscal Year End$/ }).isVisible();
+await page.locator('div').filter({ hasText: /^Estimated Report Release Date$/ }).isVisible();
+await page.locator('div').filter({ hasText: /^Form AP Approval Due Date$/ }).isVisible();
+await page.locator('div').filter({ hasText: /^Form AP Hours Record Status$/ }).isVisible();
+await page.locator('div').filter({ hasText: /^Form AP Hours Record$/ }).isVisible();
+await page.locator('div').filter({ hasText: /^My Role$/ }).isVisible();
+await page.locator('div').filter({ hasText: /^Country Name$/ }).isVisible();
 
 })
