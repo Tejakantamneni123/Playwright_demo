@@ -6,6 +6,7 @@ const page = await context.newPage();
 // Clear all cookies
 await context.clearCookies({name:'Here’s how we use cookies'});
 await page.goto("https://qtopportalweb.aaps.deloitte.com/");
+await page.waitForTimeout(5000);
 // click on get started link
 await page.getByRole("button",{name:"get started "}).click();
 // filling login details
