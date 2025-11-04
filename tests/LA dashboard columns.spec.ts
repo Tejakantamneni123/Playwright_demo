@@ -20,5 +20,6 @@ await page.locator('div').filter({ hasText: /^Form AP Hours Record Status$/ }).i
 await page.locator('div').filter({ hasText: /^Form AP Hours Record$/ }).isVisible();
 await page.locator('div').filter({ hasText: /^My Role$/ }).isVisible();
 await page.locator('div').filter({ hasText: /^Country Name$/ }).isVisible();
+await page.getByText('CREATE NEW FORM AP HOURS RECORD').click(); // create new fah button
 
 })
