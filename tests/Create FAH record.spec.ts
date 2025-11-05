@@ -11,6 +11,7 @@ await page.getByRole('button', { name: 'Sign in' }).click();; // sign-in button
 // navigate to LA dashboard
 await page.waitForTimeout(5000);
 await page.getByAltText("Group Engagement dashboard").click(); // LA dashboard
+await page.getByTestId('alert-custom-close').getByRole('img').click();
 await page.getByText('CREATE NEW FORM AP HOURS RECORD').click(); // create new fah button
 await expect(page.getByRole('heading', { name: 'Create New Form AP Hours' })).toBeVisible(); // title of fah screen
 await expect(page.getByText("Issuer Name")).toBeVisible(); // issuer name field
@@ -32,6 +33,29 @@ await page.getByLabel('Form AP Due Date to NPPD').isVisible();// Form AP Due Dat
 await page.locator('.dsi.dsiCalendar').nth(2).click();
 await page.getByTitle('Previous month (PageUp)').click();
 await page.getByTitle('October 8, 2025').click();
+await page.getByLabel('Signing Partner').isVisible(); // Signing Partner field
+await page.locator('.coreSelectDropdown-selection__rendered').first().click();
+await page.locator('#people-picker-modal-container').getByRole('textbox').fill("LEFAHTest1014@deloitte.com")
+await page.getByRole('button', { name: 'Search' }).click();
+await page.getByRole('row', { name: 'L1 1014, LEFAHTest' }).click();
+await page.getByRole('button', { name: 'CONTINUE' }).click();
+await page.getByLabel('Engagement Quality Reviewer (EQR)').isVisible();// Engagement Quality Reviewer (EQR) field
+await page.locator('div:nth-child(9) .coreSelectDropdown-selection__rendered').click();
+await page.getByText('EQRSearch users by name or').isVisible();
+await page.locator('#people-picker-modal-container').getByRole('textbox').fill("LEFAHTest1014@deloitte.com")
+await page.getByRole('button', { name: 'Search' }).click();
+await page.getByRole('row', { name: 'L1 1014, LEFAHTest' }).click();
+await page.getByRole('button', { name: 'CONTINUE' }).click();
+await page.getByLabel('Country of the firm issuing the audit report').isVisible();
+await page.locator('.dropDownWrapper > .inputWrapperContainer > #dropdownParentContainer > .coreSelectDropdown > .coreSelectDropdown-selection > .coreSelectDropdown-selection__rendered').first().click();
+await page.getByRole('option', { name: 'Ireland' }).click();
+await page.getByLabel('Firm Legal Name').isVisible();
+await page.locator("input[class='text firm-lookup-input']").click();
+await page.getByText('Select Legal Name of the Firm issuing the audit reportHeadquarters\' Country*').isVisible();
+await page.getByRole('row', { name: 'BDO' }).click();
+await page.getByRole('button', { name: 'Select Firm' }).click();
+await page.getByRole('button', { name: 'CREATE' }).click(); // create button in fah screen
+await page.waitForTimeout(5000);
+await page.getByText('In Progress').isVisible(); // FAH status
 
-
-})
+});
