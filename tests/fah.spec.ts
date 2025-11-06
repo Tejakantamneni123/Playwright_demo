@@ -1,5 +1,6 @@
 import {test,expect,Locator, Page} from "@playwright/test"
-test("Create FAH record", async({page})=>{
+import {selectdate} from "../FAH-datepicker_module"
+test.only("Initiate FAH record", async({page})=>{
 await page.goto("https://qtopportalweb.aaps.deloitte.com/");
 // click on get started link
 await page.getByRole("button",{name:"get started "}).click();
@@ -22,13 +23,43 @@ await page.getByRole('button', { name: 'Search' }).click();
 await page.getByRole('row', { name: 'AEHR TEST SYSTEMS' }).click(); // select issuername in table
 await page.getByRole('button', { name: 'CONTINUE' }).click();
 await page.getByLabel('Fiscal Year End (mm/dd/yyyy)').isVisible(); //fiscal year end field
-await page.waitForTimeout(5000);
-const datepicker1:Locator=page.locator('.dsi.dsiCalendar');
-await expect(datepicker1).toBeVisible();
-await datepicker1.click(); // open calendar
-
-
-
-
+await page.locator('.dsi.dsiCalendar').first().click(); // open calendar
+ //select target date
+const year='2025';
+const month='Nov';
+const date='16';
+selectdate(year,month,date,page,true);
+const expecteddate= '11/16/2025'; // mm/dd/yyyy
+await page.getByLabel('Estimated Report Release Date').isVisible();// Estimated Report Release Date field
+await page.locator('.dsi.dsiCalendar').nth(1).click(); // open calendar
+selectdate(year,month,date,page,true);
+await page.getByLabel('Form AP Due Date to NPPD').isVisible();// Form AP Due Date to NPPD field
+await page.locator('.dsi.dsiCalendar').nth(2).click(); // open calendar
+selectdate(year,month,date,page,true);
+await page.getByLabel('Signing Partner').isVisible(); // Signing Partner field
+await page.locator('.coreSelectDropdown-selection__rendered').first().click();
+await page.locator('#people-picker-modal-container').getByRole('textbox').fill("LEFAHTest1014@deloitte.com")
+await page.getByRole('button', { name: 'Search' }).click();
+await page.getByRole('row', { name: 'L1 1014, LEFAHTest' }).click();
+await page.getByRole('button', { name: 'CONTINUE' }).click();
+await page.getByLabel('Engagement Quality Reviewer (EQR)').isVisible();// Engagement Quality Reviewer (EQR) field
+await page.locator('div:nth-child(9) .coreSelectDropdown-selection__rendered').click();
+await page.getByText('EQRSearch users by name or').isVisible();
+await page.locator('#people-picker-modal-container').getByRole('textbox').fill("LEFAHTest1014@deloitte.com")
+await page.getByRole('button', { name: 'Search' }).click();
+await page.getByRole('row', { name: 'L1 1014, LEFAHTest' }).click();
+await page.getByRole('button', { name: 'CONTINUE' }).click();
+await page.getByLabel('Country of the firm issuing the audit report').isVisible();
+await page.locator('.dropDownWrapper > .inputWrapperContainer > #dropdownParentContainer > .coreSelectDropdown > .coreSelectDropdown-selection > .coreSelectDropdown-selection__rendered').first().click();
+await page.getByRole('option', { name: 'Ireland' }).click();
+await page.getByLabel('Firm Legal Name').isVisible();
+await page.locator("input[class='text firm-lookup-input']").click();
+await page.getByText('Select Legal Name of the Firm issuing the audit reportHeadquarters\' Country*').isVisible();
+await page.getByRole('row', { name: 'BDO' }).click();
+await page.getByRole('button', { name: 'Select Firm' }).click();
+await page.getByRole('button', { name: 'CREATE' }).click(); // create button in fah screen
+await page.getByText('In Progress').isVisible(); // FAH status
+const FAHid=await page.locator("p",{hasText:"FAH"}).innerText();
+console.log("Created FAH id is:", FAHid);
 
 })
