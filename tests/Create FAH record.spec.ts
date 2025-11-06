@@ -1,4 +1,4 @@
-import {test,expect, chromium} from "@playwright/test"
+import {test,expect,Locator,Page} from "@playwright/test"
 test("Create FAH record", async({page})=>{
 await page.goto("https://qtopportalweb.aaps.deloitte.com/");
 // click on get started link
@@ -24,14 +24,14 @@ await page.getByRole('button', { name: 'CONTINUE' }).click();
 await page.getByLabel('Fiscal Year End (mm/dd/yyyy)').isVisible(); //fiscal year end field
 await page.waitForTimeout(5000);
 await page.locator('.dsi.dsiCalendar').first().click();
-await page.getByTitle('November 5, 2025').click();
+await page.getByTitle('November 5, 2025').click(); // current month
 await page.getByLabel('Estimated Report Release Date').isVisible();// Estimated Report Release Date field
 await page.locator('.dsi.dsiCalendar').nth(1).click();
-await page.getByTitle('Next month (PageDown)').click();
+await page.getByTitle('Next month (PageDown)').click(); // next month
 await page.getByTitle('December 10, 2025').click();
 await page.getByLabel('Form AP Due Date to NPPD').isVisible();// Form AP Due Date to NPPD field
 await page.locator('.dsi.dsiCalendar').nth(2).click();
-await page.getByTitle('Previous month (PageUp)').click();
+await page.getByTitle('Previous month (PageUp)').click(); // previous month
 await page.getByTitle('October 8, 2025').click();
 await page.getByLabel('Signing Partner').isVisible(); // Signing Partner field
 await page.locator('.coreSelectDropdown-selection__rendered').first().click();
@@ -57,5 +57,4 @@ await page.getByRole('button', { name: 'Select Firm' }).click();
 await page.getByRole('button', { name: 'CREATE' }).click(); // create button in fah screen
 await page.waitForTimeout(5000);
 await page.getByText('In Progress').isVisible(); // FAH status
-
 });
