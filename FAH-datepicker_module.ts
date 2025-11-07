@@ -22,8 +22,8 @@ else
 const alldates=await page.locator(".rc-calendar-table td").all();
 for(let dt of alldates)
 {
-    const date=await dt.innerText();
-    if(date==targetdate)
+    const datetext=await dt.innerText();
+    if(datetext==targetdate)
     {
       await dt.click();
       break;

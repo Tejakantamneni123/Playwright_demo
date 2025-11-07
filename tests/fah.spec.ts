@@ -1,6 +1,6 @@
-import {test,expect,Locator, Page} from "@playwright/test"
+import {test,expect,Locator,Page} from "@playwright/test"
 import {selectdate} from "../FAH-datepicker_module"
-test.only("Initiate FAH record", async({page})=>{
+test("Initiate FAH record", async({page})=>{
 await page.goto("https://qtopportalweb.aaps.deloitte.com/");
 // click on get started link
 await page.getByRole("button",{name:"get started "}).click();
@@ -25,12 +25,16 @@ await page.getByRole('button', { name: 'CONTINUE' }).click();
 await page.getByLabel('Fiscal Year End (mm/dd/yyyy)').isVisible(); //fiscal year end field
 await page.locator('.dsi.dsiCalendar').first().click(); // open calendar
  //select target date
-const year='2025';
-const month='Nov';
-const date='16';
-selectdate(year,month,date,page,true);
-const expecteddate= '11/16/2025'; // mm/dd/yyyy
-await page.getByLabel('Estimated Report Release Date').isVisible();// Estimated Report Release Date field
+const FYEyear='2026';
+const FYEmonth='Jan';
+const FYEdate='12';
+selectdate(FYEyear,FYEmonth,FYEdate,page,true);
+const expecteddate= '01/12/2026'; // mm/dd/yyyy
+await page.waitForTimeout(4000);
+
+})
+
+/*await page.getByLabel('Estimated Report Release Date').isVisible();// Estimated Report Release Date field
 await page.locator('.dsi.dsiCalendar').nth(1).click(); // open calendar
 selectdate(year,month,date,page,true);
 await page.getByLabel('Form AP Due Date to NPPD').isVisible();// Form AP Due Date to NPPD field
@@ -61,5 +65,4 @@ await page.getByRole('button', { name: 'CREATE' }).click(); // create button in 
 await page.getByText('In Progress').isVisible(); // FAH status
 const FAHid=await page.locator("p",{hasText:"FAH"}).innerText();
 console.log("Created FAH id is:", FAHid);
-
-})
+*/

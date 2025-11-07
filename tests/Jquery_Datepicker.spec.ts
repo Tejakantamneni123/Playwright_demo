@@ -40,10 +40,10 @@ await expect(datepicker).toBeVisible();
 await datepicker.click(); // to open calendar
 // select target date
 const year='2024';
-const month='May';
-const date='24';
+const month='Nov';
+const date='20';
 selectdate(year,month,date,page,false);
-const expecteddate= '05/24/2024'; // mm/dd/yyyy
+const expecteddate= '11/20/2024'; // mm/dd/yyyy
 await expect(datepicker).toHaveValue(expecteddate);
 await page.waitForTimeout(3000);
 })

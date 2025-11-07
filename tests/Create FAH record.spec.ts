@@ -1,5 +1,5 @@
 import {test,expect,Locator,Page} from "@playwright/test"
-test.only("Create FAH record", async({page})=>{
+test("Create FAH record", async({page})=>{
 await page.goto("https://qtopportalweb.aaps.deloitte.com/");
 // click on get started link
 await page.getByRole("button",{name:"get started "}).click();
@@ -22,7 +22,6 @@ await page.getByRole('button', { name: 'Search' }).click();
 await page.getByRole('row', { name: 'AEHR TEST SYSTEMS' }).click(); // select issuername in table
 await page.getByRole('button', { name: 'CONTINUE' }).click();
 await page.getByLabel('Fiscal Year End (mm/dd/yyyy)').isVisible(); //fiscal year end field
-await page.waitForTimeout(3000);
 await page.locator('.dsi.dsiCalendar').first().click();
 await page.getByTitle('November 5, 2025').click(); // current month
 await page.getByLabel('Estimated Report Release Date').isVisible();// Estimated Report Release Date field
@@ -52,10 +51,13 @@ await page.getByRole('option', { name: 'Ireland' }).click();
 await page.getByLabel('Firm Legal Name').isVisible();
 await page.locator("input[class='text firm-lookup-input']").click();
 await page.getByText('Select Legal Name of the Firm issuing the audit reportHeadquarters\' Country*').isVisible();
-await page.getByRole('row', { name: 'BDO' }).click();
+await page.getByRole('row', { name: 'Deloitte Ireland LLP' }).click();
 await page.getByRole('button', { name: 'Select Firm' }).click();
 await page.getByRole('button', { name: 'CREATE' }).click(); // create button in fah screen
 await page.getByText('In Progress').isVisible(); // FAH status
 const FAHid=await page.locator("p",{hasText:"FAH"}).innerText();
-console.log("Created FAH id is:", FAHid);
+console.log("Created FAH id is:", FAHid); // print FAH no
+await page.locator('div').filter({ hasText: /^1$/ }).nth(1).click();  // user profile icon
+await page.locator('div').filter({ hasText: /^Logout$/ }).click(); // logout option
+
 });
