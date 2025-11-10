@@ -1,45 +1,64 @@
 import {test,expect,Locator,Page} from "@playwright/test"
-import {selectdate} from "../FAH-datepicker_module"
-test("Initiate FAH record", async({page})=>{
-await page.goto("https://qtopportalweb.aaps.deloitte.com/");
-// click on get started link
-await page.getByRole("button",{name:"get started "}).click();
-// filling login details
-await page.getByRole('textbox', { name: 'Enter your email, phone, or' }).fill('LEFAHTest1014@deloitte.com'); // email field
-await page.getByRole('button', { name: 'Next' }).click(); // next button 
-await page.getByRole('textbox', { name: 'Enter the password for' }).fill('NH@mA4g3$pn?qZF!');// password field
-await page.getByRole('button', { name: 'Sign in' }).click();; // sign-in button
-// navigate to LA dashboard
-await page.waitForTimeout(5000);
-await page.getByAltText("Group Engagement dashboard").click(); // LA dashboard
-await page.getByTestId('alert-custom-close').getByRole('img').click();
-await page.getByText('CREATE NEW FORM AP HOURS RECORD').click(); // create new fah button
-await expect(page.getByRole('heading', { name: 'Create New Form AP Hours' })).toBeVisible(); // title of fah screen
-await expect(page.getByText("Issuer Name")).toBeVisible(); // issuer name field
-await page.getByRole('combobox').filter({ hasText: 'Select a person' }).locator('div').first().click(); 
-await expect(page.getByText('Select CIK and Issuer Name')).toBeVisible();
-await page.locator('#people-picker-modal-container').getByRole('textbox').fill("test"); // search issuername/cik
-await page.getByRole('button', { name: 'Search' }).click();
-await page.getByRole('row', { name: 'AEHR TEST SYSTEMS' }).click(); // select issuername in table
-await page.getByRole('button', { name: 'CONTINUE' }).click();
-await page.getByLabel('Fiscal Year End (mm/dd/yyyy)').isVisible(); //fiscal year end field
-await page.locator('.dsi.dsiCalendar').first().click(); // open calendar
- //select target date
-const FYEyear='2026';
-const FYEmonth='Jan';
-const FYEdate='12';
-selectdate(FYEyear,FYEmonth,FYEdate,page,true);
-const expecteddate= '01/12/2026'; // mm/dd/yyyy
-await page.waitForTimeout(4000);
+import { Testconfig } from "../test.config";
+import { selectdate } from "../pages/FAH-datepicker_module"
+const config = new Testconfig();
+test('Create New Form AP Hours', async ({ page }) => {
+  await page.goto(config.appUrl);
+  // click on get started link
+  await page.getByRole("button",{name:"get started "}).click();
+  await page.getByRole('textbox', { name: 'Enter your email, phone, or' }).fill(config.email); // email field
+  await page.getByRole('button', { name: 'Next' }).click(); // next button
+  await page.getByRole('textbox', { name: 'Enter the password for' }).fill(config.password);// password field
+  await page.getByRole('button', { name: 'Sign in' }).click(); // sign-in button
+  // navigate to LA dashboard
+  await page.waitForTimeout(5000);
+  await page.getByAltText("Group Engagement dashboard").click(); // LA dashboard
+  await page.getByTestId('alert-custom-close').getByRole('img').click();
+  await page.getByText('CREATE NEW FORM AP HOURS RECORD').click(); // create new fah button
+  await expect(page.getByRole('heading', { name: 'Create New Form AP Hours' })).toBeVisible(); // title of fah screen
+  await expect(page.getByText("Issuer Name")).toBeVisible(); // issuer name field
+  await page.getByRole('combobox').filter({ hasText: 'Select a person' }).locator('div').first().click(); 
+  await expect(page.getByText('Select CIK and Issuer Name')).toBeVisible();
+  await page.locator('#people-picker-modal-container').getByRole('textbox').fill("test"); // search issuername/cik
+  await page.getByRole('button', { name: 'Search' }).click();
+  await page.getByRole('row', { name: 'AEHR TEST SYSTEMS' }).click(); // select issuername in table
+  await page.getByRole('button', { name: 'CONTINUE' }).click();
+  await page.getByLabel('Fiscal Year End (mm/dd/yyyy)').isVisible(); //fiscal year end field
+  const FYE = page.locator('.dsi.dsiCalendar').first();
+  await FYE.click(); // open calendar
+  await expect(FYE).toBeVisible();
+   //select FYEtarget date
+  const FYEyear='2025';
+  const FYEmonth='Nov';
+  const FYEdate='12';
+  selectdate(FYEyear,FYEmonth,FYEdate,page,false);
+  const expecteddate1= '11/12/2025'; // mm/dd/yyyy
+  await page.waitForTimeout(4000);
+  await page.getByLabel('Estimated Report Release Date').isVisible();// Estimated Report Release Date field
+  const ERD = page.locator('.dsi.dsiCalendar').nth(1);
+  await ERD.click(); // open calendar
+  await expect(ERD).toBeVisible();
+  //select ERDtarget date
+  const ERDyear='2026';
+  const ERDmonth='Nov';
+  const ERDdate='12';
+  selectdate(ERDyear,ERDmonth,ERDdate,page,true);
+  const expecteddate2= '11/12/2026'; // mm/dd/yyyy
+  await page.waitForTimeout(4000);
+  await page.getByLabel('Form AP Due Date to NPPD').isVisible(); // Form AP Due Date to NPPD field
+  const FADD = page.locator('.dsi.dsiCalendar').nth(2);
+  await FADD.click();  // open calendar
+  await expect(FADD).toBeVisible();
+  //select FADDtarget date
+  const FADDyear='2024';
+  const FADDmonth='Nov';
+  const FADDdate='12';
+  selectdate(FADDyear,FADDmonth,FADDdate,page,false);
+  const expecteddate3= '11/12/2024'; // mm/dd/yyyy
+  await page.waitForTimeout(4000);
+});
 
-})
-
-/*await page.getByLabel('Estimated Report Release Date').isVisible();// Estimated Report Release Date field
-await page.locator('.dsi.dsiCalendar').nth(1).click(); // open calendar
-selectdate(year,month,date,page,true);
-await page.getByLabel('Form AP Due Date to NPPD').isVisible();// Form AP Due Date to NPPD field
-await page.locator('.dsi.dsiCalendar').nth(2).click(); // open calendar
-selectdate(year,month,date,page,true);
+/*
 await page.getByLabel('Signing Partner').isVisible(); // Signing Partner field
 await page.locator('.coreSelectDropdown-selection__rendered').first().click();
 await page.locator('#people-picker-modal-container').getByRole('textbox').fill("LEFAHTest1014@deloitte.com")
@@ -65,4 +84,6 @@ await page.getByRole('button', { name: 'CREATE' }).click(); // create button in 
 await page.getByText('In Progress').isVisible(); // FAH status
 const FAHid=await page.locator("p",{hasText:"FAH"}).innerText();
 console.log("Created FAH id is:", FAHid);
+await page.locator('div').filter({ hasText: /^1$/ }).nth(1).click();  // user profile icon
+await page.locator('div').filter({ hasText: /^Logout$/ }).click(); // logout option
 */
