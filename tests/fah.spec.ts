@@ -2,7 +2,6 @@ import {test,expect,Locator,Page} from "@playwright/test"
 import { Testconfig } from "../pages/LEFAH_test_parameters"
 import { LEFAH_Homepage } from "../pages/LEFAH_homepage"
 import { selectdate } from "../pages/FAH-datepicker_module"
-import { text } from "stream/consumers"
 test('Create New Form AP Hours', async ({ page }) => {
   const config = new Testconfig();
   await page.goto(config.appUrl);
