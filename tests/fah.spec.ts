@@ -1,17 +1,23 @@
 import {test,expect,Locator,Page} from "@playwright/test"
-import { Testconfig } from "../pages/test_parameters.config"
+import { Testconfig } from "../pages/LEFAH_test_parameters"
+import { LEFAH_Homepage } from "../pages/LEFAH_homepage"
 import { selectdate } from "../pages/FAH-datepicker_module"
-const config = new Testconfig();
+import { text } from "stream/consumers"
 test('Create New Form AP Hours', async ({ page }) => {
+  const config = new Testconfig();
   await page.goto(config.appUrl);
-  await page.getByTitle("Deloitte | Legal Entities and Form AP Hours").isVisible();
-  // click on get started link
-  await page.getByRole("button",{name:"get started "}).click();
+  // Verify LEFAH homepage title
+  console.log("Title:", await page.title());
+  await expect(page).toHaveTitle("Deloitte | Legal Entities and Form AP Hours");
+  // Click on get started link on LEFAH homepage
+  const homepage = new LEFAH_Homepage(page);  
+  await homepage.clickgetstartedlink();
+  // Login process
   await page.getByRole('textbox', { name: 'Enter your email, phone, or' }).fill(config.app_email); // email field
   await page.getByRole('button', { name: 'Next' }).click(); // next button
   await page.getByRole('textbox', { name: 'Enter the password for' }).fill(config.app_password);// password field
   await page.getByRole('button', { name: 'Sign in' }).click(); // sign-in button
-  // navigate to LA dashboard
+  // Navigate to LA dashboard
   await page.waitForTimeout(5000);
   await page.getByAltText("Group Engagement dashboard").click(); // LA dashboard
   await page.getByTestId('alert-custom-close').getByRole('img').click();
@@ -81,9 +87,9 @@ await page.getByRole('row', { name: 'BDO' }).click();
 await page.getByRole('button', { name: 'Select Firm' }).click();
 await page.getByRole('button', { name: 'CREATE' }).click(); // create button in fah screen
 await page.getByText('In Progress').isVisible(); // FAH status
-const FAHid=await page.locator("p",{hasText:"FAH"}).innerText();
-console.log("Created FAH id is:", FAHid);
-await page.locator('#user-Profile').getByText('1').click();  // user profile icon
+const FAHid=await page.locator("p",{hasText:"FAH"}).innerText(); // get FAH id
+console.log("Created FAH id is:", FAHid); // print FAH id
+// logout process
+await page.locator('div').filter({ hasText: /^1$/ }).nth(1).click();  // user profile icon
 await page.locator('div').filter({ hasText: /^Logout$/ }).click(); // logout option
-
 })
