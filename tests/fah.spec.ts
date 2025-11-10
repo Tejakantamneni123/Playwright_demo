@@ -1,14 +1,15 @@
 import {test,expect,Locator,Page} from "@playwright/test"
-import { Testconfig } from "../pages/test_parameters.config";
+import { Testconfig } from "../pages/test_parameters.config"
 import { selectdate } from "../pages/FAH-datepicker_module"
 const config = new Testconfig();
 test('Create New Form AP Hours', async ({ page }) => {
   await page.goto(config.appUrl);
+  await expect(page.getByTitle("Deloitte | Legal Entities and Form AP Hours")).toBeVisible();
   // click on get started link
   await page.getByRole("button",{name:"get started "}).click();
-  await page.getByRole('textbox', { name: 'Enter your email, phone, or' }).fill(config.email); // email field
+  await page.getByRole('textbox', { name: 'Enter your email, phone, or' }).fill(config.app_email); // email field
   await page.getByRole('button', { name: 'Next' }).click(); // next button
-  await page.getByRole('textbox', { name: 'Enter the password for' }).fill(config.password);// password field
+  await page.getByRole('textbox', { name: 'Enter the password for' }).fill(config.app_password);// password field
   await page.getByRole('button', { name: 'Sign in' }).click(); // sign-in button
   // navigate to LA dashboard
   await page.waitForTimeout(5000);
@@ -23,7 +24,7 @@ test('Create New Form AP Hours', async ({ page }) => {
   await page.getByRole('button', { name: 'Search' }).click();
   await page.getByRole('row', { name: 'AEHR TEST SYSTEMS' }).click(); // select issuername in table
   await page.getByRole('button', { name: 'CONTINUE' }).click();
-  await page.getByLabel('Fiscal Year End (mm/dd/yyyy)').isVisible(); //fiscal year end field
+  await expect(page.getByLabel('Fiscal Year End (mm/dd/yyyy)')).toBeVisible(); //fiscal year end field
   const FYE = page.locator('.dsi.dsiCalendar').first();
   await FYE.click(); // open calendar
   await expect(FYE).toBeVisible();
@@ -33,8 +34,8 @@ test('Create New Form AP Hours', async ({ page }) => {
   const FYEdate='12';
   selectdate(FYEyear,FYEmonth,FYEdate,page,false);
   const expecteddate1= '11/12/2025'; // mm/dd/yyyy
-  await page.waitForTimeout(4000);
-  await page.getByLabel('Estimated Report Release Date').isVisible();// Estimated Report Release Date field
+  await page.waitForTimeout(3000);
+  await expect(page.getByLabel('Estimated Report Release Date')).toBeVisible();// Estimated Report Release Date field
   const ERD = page.locator('.dsi.dsiCalendar').nth(1);
   await ERD.click(); // open calendar
   await expect(ERD).toBeVisible();
@@ -44,8 +45,8 @@ test('Create New Form AP Hours', async ({ page }) => {
   const ERDdate='12';
   selectdate(ERDyear,ERDmonth,ERDdate,page,true);
   const expecteddate2= '11/12/2026'; // mm/dd/yyyy
-  await page.waitForTimeout(4000);
-  await page.getByLabel('Form AP Due Date to NPPD').isVisible(); // Form AP Due Date to NPPD field
+  await page.waitForTimeout(3000);
+  await expect(page.getByLabel('Form AP Due Date to NPPD')).toBeVisible(); // Form AP Due Date to NPPD field
   const FADD = page.locator('.dsi.dsiCalendar').nth(2);
   await FADD.click();  // open calendar
   await expect(FADD).toBeVisible();
@@ -54,21 +55,17 @@ test('Create New Form AP Hours', async ({ page }) => {
   const FADDmonth='Nov';
   const FADDdate='12';
   selectdate(FADDyear,FADDmonth,FADDdate,page,false);
-  const expecteddate3= '11/12/2024'; // mm/dd/yyyy
-  await page.waitForTimeout(4000);
-});
-
-/*
+  const expecteddate3= '11/12/2025'; // mm/dd/yyyy
 await page.getByLabel('Signing Partner').isVisible(); // Signing Partner field
 await page.locator('.coreSelectDropdown-selection__rendered').first().click();
-await page.locator('#people-picker-modal-container').getByRole('textbox').fill("LEFAHTest1014@deloitte.com")
+await page.locator('#people-picker-modal-container').getByRole('textbox').fill(config.Signing_Partner)
 await page.getByRole('button', { name: 'Search' }).click();
 await page.getByRole('row', { name: 'L1 1014, LEFAHTest' }).click();
 await page.getByRole('button', { name: 'CONTINUE' }).click();
 await page.getByLabel('Engagement Quality Reviewer (EQR)').isVisible();// Engagement Quality Reviewer (EQR) field
 await page.locator('div:nth-child(9) .coreSelectDropdown-selection__rendered').click();
 await page.getByText('EQRSearch users by name or').isVisible();
-await page.locator('#people-picker-modal-container').getByRole('textbox').fill("LEFAHTest1014@deloitte.com")
+await page.locator('#people-picker-modal-container').getByRole('textbox').fill(config.EQR)
 await page.getByRole('button', { name: 'Search' }).click();
 await page.getByRole('row', { name: 'L1 1014, LEFAHTest' }).click();
 await page.getByRole('button', { name: 'CONTINUE' }).click();
@@ -86,4 +83,5 @@ const FAHid=await page.locator("p",{hasText:"FAH"}).innerText();
 console.log("Created FAH id is:", FAHid);
 await page.locator('div').filter({ hasText: /^1$/ }).nth(1).click();  // user profile icon
 await page.locator('div').filter({ hasText: /^Logout$/ }).click(); // logout option
-*/
+
+})
