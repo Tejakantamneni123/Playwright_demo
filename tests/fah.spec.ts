@@ -1,5 +1,5 @@
 import {test,expect,Locator,Page} from "@playwright/test"
-import { Testconfig } from "../test.config";
+import { Testconfig } from "../pages/test_parameters.config";
 import { selectdate } from "../pages/FAH-datepicker_module"
 const config = new Testconfig();
 test('Create New Form AP Hours', async ({ page }) => {
