@@ -13,6 +13,11 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   testDir: './tests',
+  /* Maximum time one test can run for. */
+  timeout: 60000,
+  expect: {
+    timeout: 10000
+  },
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -34,25 +39,36 @@ export default defineConfig({
     video: 'retain-on-failure',
     headless:false,
     viewport:{width:1280,height:720},
-
   },
 
   /* Configure projects for major browsers */
   projects: [
+  
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { ...devices['Desktop Chrome'],
+        launchOptions: {
+          args: [
+            '--disable-features=MediaRouter', // Disables the Media Router, which can trigger network discovery
+            '--disable-notifications', // Disables general browser notifications
+            '--disable-popup-blocking', // Disables popup blocking
+            '--disable-background-networking', // Disables background networking tasks
+            '--disable-features=NetworkService', // Disables the network service
+
+          ],
+      },
     },
+  },
 /*
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
     },
-
-    {
+ {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
     },
+    
 
     /* Test against mobile viewports. */
     // {
@@ -65,14 +81,7 @@ export default defineConfig({
     // },
 
     /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
+    // 
   
   ],
 

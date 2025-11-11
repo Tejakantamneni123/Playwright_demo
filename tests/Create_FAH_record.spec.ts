@@ -25,10 +25,11 @@ test('Create New Form AP Hours', async ({ page }) => {
   await expect(page.getByText("Issuer Name")).toBeVisible(); // issuer name field
   await page.getByRole('combobox').filter({ hasText: 'Select a person' }).locator('div').first().click(); 
   await expect(page.getByText('Select CIK and Issuer Name')).toBeVisible();
-  await page.locator('#people-picker-modal-container').getByRole('textbox').fill("test"); // search issuername/cik
+  await page.locator('#people-picker-modal-container').getByRole('textbox').fill("TEST"); // search issuername/cik
   await page.getByRole('button', { name: 'Search' }).click();
   await page.getByRole('row', { name: 'AEHR TEST SYSTEMS' }).click(); // select issuername in table
   await page.getByRole('button', { name: 'CONTINUE' }).click();
+  await page.waitForTimeout(4000);
   await page.getByLabel('Fiscal Year End (mm/dd/yyyy)').isVisible(); //fiscal year end field
   const FYE = page.locator('.dsi.dsiCalendar').first();
   await FYE.click(); // open calendar
@@ -39,7 +40,7 @@ test('Create New Form AP Hours', async ({ page }) => {
   const FYEdate='12';
   selectdate(FYEyear,FYEmonth,FYEdate,page,false);
   const expecteddate1= '11/12/2025'; // mm/dd/yyyy
-  await page.waitForTimeout(3000);
+  await page.waitForTimeout(4000);
   await page.getByLabel('Estimated Report Release Date').isVisible();// Estimated Report Release Date field
   const ERD = page.locator('.dsi.dsiCalendar').nth(1);
   await ERD.click(); // open calendar
@@ -50,7 +51,7 @@ test('Create New Form AP Hours', async ({ page }) => {
   const ERDdate='12';
   selectdate(ERDyear,ERDmonth,ERDdate,page,true);
   const expecteddate2= '11/12/2026'; // mm/dd/yyyy
-  await page.waitForTimeout(3000);
+  await page.waitForTimeout(4000);
   await page.getByLabel('Form AP Due Date to NPPD').isVisible(); // Form AP Due Date to NPPD field
   const FADD = page.locator('.dsi.dsiCalendar').nth(2);
   await FADD.click();  // open calendar
@@ -61,10 +62,9 @@ test('Create New Form AP Hours', async ({ page }) => {
   const FADDdate='12';
   selectdate(FADDyear,FADDmonth,FADDdate,page,false);
   const expecteddate3= '11/12/2025'; // mm/dd/yyyy
-await page.waitForTimeout(3000);
+  await page.waitForTimeout(4000);
 await page.getByLabel('Signing Partner').isVisible(); // Signing Partner field
 await page.locator('.hc-label-bold > .people-picker-container > .textbox-wrapper > .inputContainer.general > .inputWrapperContainer > #dropdownParentContainer > .coreSelectDropdown > .coreSelectDropdown-selection > .coreSelectDropdown-selection__rendered').first().click();
-//await page.locator('.coreSelectDropdown-selection__rendered').first().click();
 await page.locator('#people-picker-modal-container').getByRole('textbox').fill(config.Signing_Partner);
 await page.getByRole('button', { name: 'Search' }).click();
 await page.getByRole('row', { name: 'L1 1014, LEFAHTest' }).click();
@@ -85,10 +85,12 @@ await page.getByText('Select Legal Name of the Firm issuing the audit reportHead
 await page.getByRole('row', { name: 'BDO' }).click();
 await page.getByRole('button', { name: 'Select Firm' }).click();
 await page.getByRole('button', { name: 'CREATE' }).click(); // create button in fah screen
+await page.waitForTimeout(5000);
+// Verification of FAH creation
 await page.getByText('In Progress').isVisible(); // FAH status
-const FAHid=await page.locator("p",{hasText:"FAH"}).innerText(); // get FAH id
+const FAHid=await page.locator("p",{hasText:"FAH-"}).innerText(); // get FAH id
 console.log("Created FAH id is:", FAHid); // print FAH id
 // logout process
-await page.locator('div').filter({ hasText: /^1$/ }).nth(1).click();  // user profile icon
+await page.locator('#user-Profile').filter({ hasText: /^1$/ }).click();  // user profile icon
 await page.locator('div').filter({ hasText: /^Logout$/ }).click(); // logout option
 })
