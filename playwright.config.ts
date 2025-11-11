@@ -39,6 +39,8 @@ export default defineConfig({
     video: 'retain-on-failure',
     headless:false,
     viewport:{width:1280,height:720},
+    ignoreHTTPSErrors:true, // ignores HTTPS errors
+    permissions:['geolocation'], // grants geolocation permission
   },
 
   /* Configure projects for major browsers */
@@ -49,11 +51,10 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'],
         launchOptions: {
           args: [
-            '--disable-features=MediaRouter', // Disables the Media Router, which can trigger network discovery
+           
             '--disable-notifications', // Disables general browser notifications
             '--disable-popup-blocking', // Disables popup blocking
             '--disable-background-networking', // Disables background networking tasks
-            '--disable-features=NetworkService', // Disables the network service
 
           ],
       },
