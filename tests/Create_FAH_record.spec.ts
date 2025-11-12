@@ -1,12 +1,16 @@
-import {test,expect,Locator,Page} from "@playwright/test"
+import {test,expect,Locator,chromium} from "@playwright/test"
 import { Testconfig } from "../pages/LEFAH_test_parameters"
 import { LEFAH_Homepage } from "../pages/LEFAH_homepage"
 import { selectdate } from "../pages/FAH-datepicker_module"
-test('Create New Form AP Hours', async ({ page }) => {
-  const config = new Testconfig();
-  await page.goto(config.appUrl);
+test('Create New Form AP Hours', async ({}) => {
+const browser = await chromium.launch();
+const context = await browser.newContext();
+const page = await context.newPage();
+const config = new Testconfig();
+  await context.clearCookies({name:'Here’s how we use cookies'}); // Clear cookies
+  await page.goto(config.appUrl); // LEFAH application URL
   // Verify LEFAH homepage title
-  console.log("Title:", await page.title());
+  console.log("Title:", await page.title()); // print page title
   await expect(page).toHaveTitle("Deloitte | Legal Entities and Form AP Hours");
   // Click on get started link on LEFAH homepage
   const homepage = new LEFAH_Homepage(page);  
