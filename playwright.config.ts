@@ -36,6 +36,7 @@ export default defineConfig({
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
+    baseURL: 'https://restful-booker.herokuapp.com',
     headless:false,
     viewport:{width:1280,height:720},
     ignoreHTTPSErrors:true, // ignores HTTPS errors

@@ -1,0 +1,10 @@
+{
+   "firstname": "pavan",
+   "lastname": "kommineni",
+   "totalprice": 1100,
+   "depositpaid": true,
+   "bookingdates": {
+      "checkin": "2025-11-27",
+      "checkout": "2025-11-29"
+   }
+}
