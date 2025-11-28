@@ -1,10 +1,8 @@
-import {test,expect,Locator,BrowserContext,chromium,Page} from "@playwright/test"
+import {test,expect,Locator,chromium, Page} from "@playwright/test"
 import { Testconfig } from "../pages/LEFAH_test_parameters"
 import { LEFAH_Homepage } from "../pages/LEFAH_homepage"
 import { selectdate } from "../pages/FAH-datepicker_module"
-import * as path from 'path';
-import * as fs from 'fs';
-test('Create OAF record', async () => {
+test('Deletion of OAF subrequest', async() => {
 const browser = await chromium.launch();
 const context = await browser.newContext(); // Incognito
 const page = await context.newPage();
@@ -15,7 +13,7 @@ const config = new Testconfig();
   console.log("Title:", await page.title()); // print page title
   await expect(page).toHaveTitle("Deloitte | Legal Entities and Form AP Hours");
   // Click on get started link on LEFAH homepage
-  const homepage = new LEFAH_Homepage(page);  
+  const homepage = new LEFAH_Homepage(page);
   await homepage.clickgetstartedlink();
   // Login process
   await page.getByRole('textbox', { name: 'Enter your email, phone, or' }).fill(config.app_email); // email field
@@ -102,7 +100,7 @@ await page.locator('#oaf-hr-request-table').getByRole('button', { name: 'Actions
 await page.getByText('Add Request').click();
 await page.getByRole('heading', { name: 'Add Other Accounting Firm -Request' }).isVisible();
 await expect(page.getByText('Name', { exact: true })).toBeVisible();
-await page.getByRole('textbox').first().fill('OAF req-123');
+await page.getByRole('textbox').first().fill('OAF Mainreq');
 await expect(page.getByText('Status')).toBeVisible();
 await expect(page.getByText('Not Sent')).toBeVisible();
 await page.getByText('Other Accounting Firm Country', { exact: true }).isVisible();
@@ -167,7 +165,7 @@ await page.getByRole('button', { name: 'OK' }).click();
 // sub-request screen
 await page.getByRole('heading', { name: 'Add Other Accounting Firm -Request' }).isVisible();
 await expect(page.getByText('Name', { exact: true })).toBeVisible();
-await page.getByRole('textbox').first().fill('OAF subreq-123');
+await page.getByRole('textbox').first().fill('OAF Subreq');
 await expect(page.getByText('Status')).toBeVisible();
 await expect(page.getByText('Not Sent')).toBeVisible();
 await page.getByText('Other Accounting Firm Country', { exact: true }).isVisible();
@@ -224,8 +222,12 @@ await page.getByRole('button', { name: 'SAVE AND CLOSE' }).click(); // main req 
 await page.waitForTimeout(5000);
 await page.getByRole('button', { name: 'Other Accounting Firms — Requests for Hours Sent by Lead Auditor' }).click();
 // send request to OAF team members
-
-
+await page.locator("div[aria-label='Select all Checkbox not checked']").click();
+await page.locator('#oaf-hr-request-table').getByRole('button', { name: 'Actions' }).click();
+await page.getByText('Send Request').click();
+await expect(page.getByRole('heading', { name: 'Send Request'})).toBeVisible();
+await page.getByRole('button', {name:'Submit Request'}).click();
+await page.waitForTimeout(5000);
 // verify created OAF record in table
 const table:Locator=page.locator('.table-wrapper').first();
 await expect(table).toBeVisible();
@@ -235,24 +237,24 @@ console.log("no of rows in table:", rows.length);
 // count no of columns in a table
 const columns:Locator[]=await table.locator(".dataTableCell").all();
 console.log("no of columns in table:", columns.length);
-// Read each row for oaf presence
+// Verify oaf subreq and status
 for (const row of rows)
 {
  const secondrow:string= await row.locator(".dataTableRow").nth(1).innerText();
  console.log("second row in the table:", secondrow);
- if(secondrow.trim()=="OAF subreq-123")
+ if(secondrow.trim()=="OAF Subreq")
  {
-    await expect(row.getByRole('gridcell', { name: 'OAF subreq-123' })).toBeVisible(); //   verify oaf-name
-    break;
+  await expect(row.getByRole('gridcell', { name: 'OAF Subreq' })).toBeVisible();//  verify oaf-name
+  await expect(row.getByRole('gridcell', { name: 'Hours Requested from OAF' })).toBeVisible(); // verify oaf-status
+  break;
  }
-}
-// open the sub-request and delete it
-await page.getByRole('gridcell', { name: 'OAF subreq-123' }).click();
+ // open the Subreq and delete it
+await page.getByRole('gridcell', { name: 'OAF Subreq' }).click();
 await page.getByRole('button', { name: 'Actions' }).click();
 await page.getByRole('button', {name:'Delete'}).click();
-await page.getByRole('heading', { name: 'Delete Confirmation'}).isVisible();// delete popup
+await expect(page.getByRole('heading', { name: 'Delete Confirmation'})).toBeVisible();// delete popup
 await page.getByText('Delete').click();
 await page.waitForTimeout(5000);
-await expect(page.getByRole('gridcell', { name: 'OAF subreq-123' })).not.toBeVisible();// verify deleted OAF-subrequest
-
-})
+await expect(page.getByRole('gridcell', { name: 'OAF Subreq' })).not.toBeVisible();// verify deleted OAF-subrequest
+}
+});

@@ -8,7 +8,7 @@ npm install luxon - deal with dates need to install luxon library
 import {test, expect} from "@playwright/test"
 import {faker} from "@faker-js/faker";
 import {DateTime} from 'luxon';
-test.only("Create post request using faker library", async({request})=>{
+test("Create post request using faker library", async({request})=>{
 // data generation using faker
 const firstname=faker.person.firstName();
 const lastname=faker.person.lastName();

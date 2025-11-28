@@ -2,7 +2,7 @@ import {test,expect,Locator,chromium} from "@playwright/test"
 import { Testconfig } from "../pages/LEFAH_test_parameters"
 import { LEFAH_Homepage } from "../pages/LEFAH_homepage"
 import { selectdate } from "../pages/FAH-datepicker_module"
-test('Create New Form AP Hours', async ({}) => {
+test('Create New Form AP Hours', async() => {
 const browser = await chromium.launch();
 const context = await browser.newContext();
 const page = await context.newPage();
@@ -90,7 +90,7 @@ await page.getByRole('row', { name: 'BDO' }).click();
 await page.getByRole('button', { name: 'Select Firm' }).click();
 await page.getByRole('button', { name: 'CREATE' }).click(); // create button in fah screen
 await page.waitForTimeout(5000);
-// Verification of FAH creation
+// Verification of FAH record creation
 await page.getByText('In Progress').isVisible(); // FAH status
 const FAHid=await page.locator("p",{hasText:"FAH-"}).innerText(); // get FAH id
 console.log("Created FAH id is:", FAHid); // print FAH id
